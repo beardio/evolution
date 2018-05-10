@@ -101,9 +101,8 @@
   ;; get current pos of the animal passed in
   ;;  (let ((pos (cons (animal-x animald) (animal-y animald)))))
   (let* ((animal-nu nil)
-         (genes nil)
-         (mutation nil)
          (good nil)))
+  
   (mapc (lambda (animal)
           ;;    (let ((pos-mate (cons (animal-x animal) (animal-y animal))))) 
           ;;(unless (eq animal-genes animald animal-genes animal)
@@ -111,21 +110,23 @@
               (if (= (animal-y animald) (animal-y animal))
                   (if (>= (animal-energy animald) *reproduction-energy*)
                       (if (>= (animal-energy animal) *reproduction-energy*)
-                          (if (not (eq (animal-genes animal) (animal-genes animald)))
+                          (if (not (eql (animal-genes animal) (animal-genes animald)))
                               (progn
                                 (setf (animal-energy animald) (ash (animal-energy animald) -1))
                                 (setf (animal-energy animal) (ash (animal-energy animal) -1))
-                                (setf animal-nu (copy-structure animald))
-                                (setf genes     (copy-list (animal-genes animal)))
-                                (setf mutation  (random 8))
+                                ;;(setf animal-nu (copy-structure animald)) 
+                                ;;(setf mutation  (random 8))
                                 (setf good t))))))))
         *animals*)
   (if good
-      (let* ((setf (nth mutation genes) (max 1 (+ (nth mutation genes) (random 3) -1)))
-             (setf (animal-genes animal-nu) genes)
-             (push animal-nu *animals*))
-        t)
-      t)
+      (let*  ((animal-nu (make-animal :x         (random 99)
+                                      :y         (random 29)
+                                      :energy    1000
+                                      :dir       (random 8)
+                                      :genes     (loop repeat 8
+                                                    collecting (1+ (random 10))))))
+        (push animal-nu *animals*))
+      )
   )
 
 (defun update-world ()
@@ -134,10 +135,10 @@
                              *animals*))
   ;;map thru all the animals
   (mapc (lambda (animal)
-          (reproduce animal)
           (turn animal)
           (move animal)
-          (eat animal))
+          (eat animal)
+          (reproduce animal))
         *animals*)
   (add-plants))
 
