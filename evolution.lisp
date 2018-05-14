@@ -100,34 +100,27 @@
 (defun reproduce (animald)
   ;; get current pos of the animal passed in
   ;;  (let ((pos (cons (animal-x animald) (animal-y animald)))))
-  (let* ((animal-nu nil)
-         (good nil)))
-  
-  (mapc (lambda (animal)
-          ;;    (let ((pos-mate (cons (animal-x animal) (animal-y animal))))) 
-          ;;(unless (eq animal-genes animald animal-genes animal)
-          (if (= (animal-x animald) (animal-x animal))
-              (if (= (animal-y animald) (animal-y animal))
-                  (if (>= (animal-energy animald) *reproduction-energy*)
-                      (if (>= (animal-energy animal) *reproduction-energy*)
-                          (if (not (eql (animal-genes animal) (animal-genes animald)))
-                              (progn
-                                (setf (animal-energy animald) (ash (animal-energy animald) -1))
-                                (setf (animal-energy animal) (ash (animal-energy animal) -1))
-                                ;;(setf animal-nu (copy-structure animald)) 
-                                ;;(setf mutation  (random 8))
-                                (setf good t))))))))
-        *animals*)
-  (if good
-      (let*  ((animal-nu (make-animal :x         (random 99)
-                                      :y         (random 29)
-                                      :energy    1000
-                                      :dir       (random 8)
-                                      :genes     (loop repeat 8
-                                                    collecting (1+ (random 10))))))
-        (push animal-nu *animals*))
-      )
-  )
+
+  (let* ((animal-born nil)))
+
+  (loop for animal-nu in *animals*
+     if (= (animal-x animald) (animal-x animal-nu))
+     if (= (animal-y animald) (animal-y animal-nu))
+     if (>= (animal-energy animald) *reproduction-energy*)
+     if (>= (animal-energy animal-nu) *reproduction-energy*)
+     if (not (eql (animal-genes animal-nu) (animal-genes animald)))
+     do
+       (setf (animal-energy animald) (ash (animal-energy animald) -1)) 
+       (setf (animal-energy animal-nu) (ash (animal-energy animal-nu) -1))
+       (let*  ((animal-born (make-animal :x         (random 99)
+                                         :y         (random 29)
+                                         :energy    1000
+                                         :dir       (random 8)
+                                         :genes     (loop repeat 8
+                                                       collecting (1+ (random 10))))))
+         (push animal-born *animals*))))
+
+
 
 (defun update-world ()
   (setf *animals* (remove-if (lambda (animal)
