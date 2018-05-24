@@ -1,8 +1,8 @@
 
 (defparameter *width* 100)   ;;world
-(defparameter *height* 30)
+(defparameter *height* 50)
 (defparameter *jungle* '(45 10 10 10))  ;;location of jungle in map
-(defparameter *plant-energy* 80)   ;;80 days worth of food eating plant
+(defparameter *plant-energy* 50)   ;;80 days worth of food eating plant
 
 ;;save plants coordinates in a hash table, coords are the key
 (defparameter *plants* (make-hash-table :test #'equal))
@@ -94,7 +94,7 @@
 
 
 ;;min energy level to reproduce
-(defparameter *reproduction-energy* 200)
+(defparameter *reproduction-energy* 100)
 
 ;;main func, lambda will call this func with animal from list
 (defun reproduce (animald)
